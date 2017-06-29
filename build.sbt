@@ -1,68 +1,62 @@
+organization := "org.zalando"
 
-organization := "com.kenshoo"
+name := "markscheider"
 
-name := "metrics-play"
+lazy val root = (project in file(".")).enablePlugins(PlayScala, TutPlugin)
 
-version := "2.4.0_0.2.2-r8_inbox_play24"
+scalaVersion := "2.12.2"
+crossScalaVersions := Seq("2.11.11", "2.12.2")
 
-scalaVersion := "2.11.7"
-
-crossScalaVersions := Seq("2.10.4", "2.11.2")
-
-testOptions in Test += Tests.Argument("junitxml", "console")
-
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
+val dropWizardMetricsVersion = "3.2.2"
 
 libraryDependencies ++= Seq(
-  "io.dropwizard.metrics" % "metrics-graphite" % "3.1.0",
-  "io.dropwizard.metrics" % "metrics-core" % "3.1.0",
-  "io.dropwizard.metrics" % "metrics-json" % "3.1.0",
-  "io.dropwizard.metrics" % "metrics-jvm" % "3.1.0",
-  "io.dropwizard.metrics" % "metrics-logback" % "3.1.0",
-  "com.typesafe.play" %% "play" % "2.4.2" % "provided",
-  //test
-  "com.typesafe.play" %% "play-test" % "2.3.4" % "test",
-  "org.specs2" %% "specs2" % "3.3.1" % "test",
-  "org.mockito" % "mockito-all" % "1.9.5" % "test",
-  "javax.inject" % "javax.inject" % "1"
+  "io.dropwizard.metrics" % "metrics-core" % dropWizardMetricsVersion,
+  "io.dropwizard.metrics" % "metrics-json" % dropWizardMetricsVersion,
+  "io.dropwizard.metrics" % "metrics-jvm" % dropWizardMetricsVersion,
+  "io.dropwizard.metrics" % "metrics-logback" % dropWizardMetricsVersion,
+  "com.google.code.findbugs" % "jsr305" % "3.0.2",
+  "com.google.guava" % "guava" % "22.0"
 )
 
-libraryDependencies += specs2 % Test
+libraryDependencies += guice
 
-resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
+//Test dependencies
+libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.0.3",
+  "org.scalacheck" %% "scalacheck" % "1.13.5"
+) map (_ % "test")
 
+maintainer := "team-kohle@zalando.de"
+licenses += ("Apache-2.0", url("https://opensource.org/licenses/Apache-2.0"))
+
+//pom extra info
 publishMavenStyle := true
 
-publishTo := Some("cody" at "http://cody:8082/nexus/content/repositories/releases")
-
-credentials += Credentials(Path.userHome / ".sbt" / "sonatype.credentials")
-
-pomIncludeRepository := { _ => false}
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
 
 publishArtifact in Test := false
 
-pomExtra := (
-  <url>https://github.com/kenshoo/metrics-play</url>
-    <inceptionYear>2013</inceptionYear>
-    <licenses>
-      <license>
-        <name>Apache 2</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        <distribution>repo</distribution>
-        <comments>A business-friendly OSS license</comments>
-      </license>
-    </licenses>
-    <scm>
-      <url>git@github.com:kenshoo/metrics-play.git</url>
-      <connection>scm:git@github.com:kenshoo/metrics-play.git</connection>
-    </scm>
+pomExtra := (<scm>
+    <url>git@github.com:zalando-incubator/markscheider.git</url>
+    <developerConnection>scm:git:git@github.com:zalando-incubator/markscheider.git</developerConnection>
+    <connection>scm:git:https://github.com/zalando-incubator/markscheider.git</connection>
+  </scm>
     <developers>
       <developer>
-        <name>Lior Harel</name>
-        <email>harel.lior@gmail.com</email>
-        <roles>
-          <role>Author</role>
-        </roles>
-        <organization>Kenshoo</organization>
+        <name>Werner Hahn</name>
+        <email>werner.hahn@zalando-payments.com</email>
+        <url>https://github.com/zalando</url>
       </developer>
     </developers>)
+
+homepage := Some(url("https://github.com/zalando-incubator/markscheider"))
+
+//settings to compile readme
+tutSourceDirectory := baseDirectory.value / "tut"
+tutTargetDirectory := baseDirectory.value

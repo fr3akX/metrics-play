@@ -28,7 +28,7 @@ To enable the plugin, add to `conf/application.conf`:
 Then add a class `Filters` as described in [The Play docs](https://www.playframework.com/documentation/2.5.x/ScalaHttpFilters) to
 include the filter in your filter chain.
 
-```scala
+```tut:silent
 import javax.inject.Inject
 import play.api.http.DefaultHttpFilters
 import org.zalando.markscheider.MetricsFilter
@@ -56,12 +56,11 @@ the settings in your `application.conf`. Otherwise the default settings are used
 
 _Note_: the namespace for the configuration is `org.zalando.markscheider`.
 
-## Contributions
-
-We welcome contributions. See [CONTRIBUTIONS.md](CONTRIBUTIONS.md) for details.
-
 ## Credits
 This lib was adapted from https://github.com/fr3akX/metrics-play, which contains code from other sources as well.
+
+## Contact
+Feel free to drop me a line at lena.brueder@zalando.de.
 
 ## License
 This code is released under the Apache Public License 2.0.
